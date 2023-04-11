@@ -1,8 +1,8 @@
 run:
 	docker compose up -d
-	flask --app todo_app/app.py run --debug
+	venv/bin/flask --app todo_app run --debug
 
 test:
-	python todo_app/test_app.py
+	venv/bin/python test_todo.py
 
 default: run

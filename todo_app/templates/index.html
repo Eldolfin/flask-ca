@@ -1,74 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-  <meta charset="UTF-8">
-  <title>FlaskApp</title>
-  <style>
-    .todo {
-      padding: 20px;
-      margin: 10px;
-      background-color: #eee;
-    }
+{% block extrahead %}
+<style>
+  .todo {
+    padding: 20px;
+    margin: 10px;
+    background-color: #eee;
+  }
 
-    .tag-work {
-      color: red;
-    }
+  .tag-Work {
+    color: red;
+  }
 
-    .tag-personal {
-      color: blue;
-    }
-  </style>
-</head>
+  .tag-Personal {
+    color: blue;
+  }
+</style>
+{% endblock %}
 
-<body>
-  <h1>FlaskTODO</h1>
+{% block content %}
+<h1>FlaskTODO</h1>
+<hr>
+<div class="content">
+  <form method="post">
+    <p>
+      <b><label for="content">Todo content</label></b>
+    </p>
+    <p>
+      <input type="text" name="content" placeholder="Todo Content"></input>
+    </p>
+
+    <p>
+      <b><label for="degree">Degree</label></b>
+    </p>
+    <p>
+      <input id="degree-0" name="degree" required type="radio" value="Important">
+      <label for="degree-0">Important</label>
+    </p>
+    <p>
+      <input id="degree-1" name="degree" required type="radio" value="Unimportant">
+      <label for="degree-1">Unimportant</label>
+    </p>
+    <p>
+      <b><label for="tag">Tag</label></b>
+    </p>
+    <p class="tag-Work">
+      <input id="work" name="tag" required type="radio" value="Work">
+      <label for="work">Work</label>
+    </p>
+    <p class="tag-Personal">
+      <input id="personal" name="tag" required type="radio" value="Personal">
+      <label for="personal">Personal</label>
+    </p>
+    <button type="submit">Submit</button>
+  </form>
   <hr>
-  <div class="content">
-    <form method="post">
-      <p>
-        <b><label for="content">Todo content</label></b>
-      </p>
-      <p>
-        <input type="text" name="content" placeholder="Todo Content"></input>
-      </p>
-
-      <p>
-        <b><label for="degree">Degree</label></b>
-      </p>
-      <p>
-        <input id="degree-0" name="degree" required type="radio" value="Important">
-        <label for="degree-0">Important</label>
-      </p>
-      <p>
-        <input id="degree-1" name="degree" required type="radio" value="Unimportant">
-        <label for="degree-1">Unimportant</label>
-      </p>
-      <p>
-        <b><label for="tag">Tag</label></b>
-      </p>
-      <p class="tag-work">
-        <input id="work" name="tag" required type="radio" value="work">
-        <label for="work">Work</label>
-      </p>
-      <p class="tag-personal">
-        <input id="personal" name="tag" required type="radio" value="personal">
-        <label for="personal">Personal</label>
-      </p>
-      <button type="submit">Submit</button>
+  {% for todo in todos %}
+  <div class="todo">
+    <p class="tag-{{todo['tag']}}">{{ todo['content'] }} <i>({{ todo['degree']}})</i></p>
+    <form method="POST" action="{{ url_for('main.delete', id=todo['_id']) }}">
+      <input type="submit" value="Delete Todo" onclick="return confirm('Are you sure you want to delete this entry?')">
     </form>
-    <hr>
-    {% for todo in todos %}
-    <div class="todo">
-      <p class="tag-{{todo['tag']}}">{{ todo['content'] }} <i>({{ todo['degree']}})</i></p>
-      <form method="POST" action="{{ url_for('delete', id=todo['_id']) }}">
-        <input type="submit" value="Delete Todo"
-          onclick="return confirm('Are you sure you want to delete this entry?')">
-      </form>
-    </div>
-    {% endfor %}
-
   </div>
-</body>
-
-</html>
+  {% endfor %}
+</div>
+{% endblock %}
