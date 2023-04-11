@@ -3,11 +3,11 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 
 app = Flask(__name__)
-# client = MongoClient('localhost', 27017)
-# client = MongoClient('localhost', 27017, username='username', password='password')
+username = 'flask'
+password = 'CKMMymVGKnTVW%2B62Z5K5H8Hxp3jA9Mmf%2FC98E82FWyA%3D'
 
-client = MongoClient("mongodb+srv://'geoff_wright':'Thorn123'@cluster0.lz9tjnm.mongodb.net/?retryWrites=true&w=majority")
-db = client.test
+client = MongoClient(
+    f'mongodb://username:password@localhost:27017/ferretdb?authMechanism=PLAIN', serverSelectionTimeoutMS=100)
 
 
 db = client.flask_db
@@ -19,7 +19,8 @@ def index():
     if request.method == 'POST':
         content = request.form['content']
         degree = request.form['degree']
-        todos.insert_one({'content': content, 'degree': degree})
+        tag = request.form['tag']
+        todos.insert_one({'content': content, 'degree': degree, 'tag': tag})
         return redirect(url_for('index'))
 
     all_todos = todos.find()
