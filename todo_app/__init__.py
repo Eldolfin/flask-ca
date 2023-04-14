@@ -26,9 +26,10 @@ def create_app():
     login_manager.login_view = 'auth.login'
 
     @login_manager.user_loader
-    def load_user(user_id):
+    def load_user(user_id) -> User:
         user = users.find_one(filter={'id': user_id})
-        assert user is not None
+        if user is None:
+            return None
         user = User.fromdict(user)
         return user
 

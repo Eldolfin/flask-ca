@@ -1,7 +1,6 @@
 from __future__ import annotations
 from enum import StrEnum
 from flask_login import UserMixin
-from dataclasses import dataclass, asdict
 
 
 class User(UserMixin):
@@ -39,20 +38,24 @@ class Degree(StrEnum):
     UNIMPORTANT = "Unimportant"
 
 
-# NamedTuple permits automatic conversion from and to dict
-# but was not used for the User model as it doesn't allow
-# multiple inheritance
-@dataclass
 class Todo:
     tag: Tag
     degree: Degree
     content: str
+    userid: str
 
-    def __init__(self, tag: str, degree: str, content: str) -> None:
+    def __init__(self, tag: str, degree: str, content: str, userid: str) -> None:
         self.tag = Tag(tag)
         self.degree = Degree(degree)
         self.content = content
+        self.userid = userid
 
     def __iter__(self):
-        for k, v in asdict(self).items():
-            yield k, str(v)
+        yield 'tag', self.tag
+        yield 'degree', self.degree
+        yield 'content', self.content
+        yield 'userid', self.userid
+
+    @classmethod
+    def fromdict(cls, d: dict[str, str]) -> Todo:
+        return cls(Tag(d['tag']), Degree(d['degree']), d['content'], d['userid'])
